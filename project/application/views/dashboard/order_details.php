@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title></title>
+	<link rel="stylesheet" href="<?php echo base_url();?>css/main.css" type="text/css">
+	</head>
+<body>
+	<div id="wrapper">
+			<?php $this->load->view("header"); ?>
+	  <div id="content" class="checkout">
+			  <div id="breadcrumb"> <a href="#">Our Products</a> </div>
+			  <div id="left">
+			    <h1 class="bar">Customer Dashboard</h1>
+			    <ul id="cats">
+			      <li><a href="<?php echo base_url();?>index.php/user">My Orders</a></li>
+			      <li><a href="<?php echo base_url();?>index.php/user/account">Update My Details</a></li>
+		        </ul>
+	    </div>
+			  <div id="right">
+					<h1 class="bar">Order No: <?php echo $this->uri->segment(3);?></h1>
+<?php
+if($order->order_status=='new')
+$color='green';
+if($order->order_status=='cancelled')
+$color='red';
+else
+$color='orange';
+?>
+					<h2>Status: <span style="color:<?php echo $color;?>"><?php echo ucwords($order->order_status);?></span></h2>
+
+					<h2>Delivery Address</h2>
+					<p><?php echo $address->address1;?><br /><?php echo $address->address2;?><br /><?php echo $address->city;?><br /><?php echo $address->county;?><br /><?php echo $address->post_code;?></p>
+					<br />
+					<h2>Order Summary</h2>
+						<?php
+					if($cart_products!='empty')
+					{
+					?>
+					<table id="cart">
+						<thead>
+							<th>Product</th>
+							<th class="qty-column">Qty</th>
+							<th>Price</th>
+							<th>Total</th>
+						</thead>
+						<tbody>
+                        <?php 
+						$total_price	=	0;
+						foreach($cart_products as $product) {	
+						$total_price += $product->item_total_price;
+						?>
+							<tr>
+								<td><?php echo $product->item_name;?></td>
+								<td><?php echo $product->item_quantity;?></td>
+								<td>£ <?php echo number_format($product->item_price,2);?></td>
+								<td>£ <?php echo number_format($product->item_total_price,2);?></td>
+							</tr>
+                          <?php } ?>  
+							<tr>
+								<td colspan="2" class="hidden"></td>
+								<td><strong>Sub Total</strong></td>
+								<td>£<?php echo number_format($total_price,2);?></td>
+							<tr>
+							<tr>
+								<td colspan="2" class="hidden"></td>
+								<td><strong>VAT (20%)</strong></td>
+								<td>£ <?php $vat = ($total_price*(0.2)); echo number_format($vat,2);?></td>
+							<tr>
+							<tr>
+								<td colspan="2" class="hidden"></td>
+								<td><strong>Total</strong></td>
+								<td>£<?php echo number_format($total_price+$vat,2);?></td>
+							<tr>
+						</tbody>
+					</table>
+                    <?php  } ?>
+				</div>
+			  <div class="clear"></div>
+			  <?php $this->load->view("footer"); ?>
+	  </div>
+	</div>
+</body>
+</html>
